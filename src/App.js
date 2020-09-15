@@ -5,6 +5,13 @@ import * as shortid from 'shortid'
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos'
 
+const delay = (time_ms) => {
+    return new Promise(resolve => setTimeout(resolve, time_ms))
+}
+
+
+
+
 function App() {
     /* Create local unique ID */
     const id = shortid
@@ -14,6 +21,19 @@ function App() {
 
     /* TODO list input reference */
     const todoInputRef = useRef()
+
+    /* Make a loading screen show up every time the user loads the application */
+    useEffect(() => {
+        const timeout_ms = 2000;
+        delay(timeout_ms)
+            .then(() => {
+                const loader = document.querySelector('.slider')
+                if(loader) {
+                    loader.outerHTML = ''
+                }
+            })
+            .catch(err => console.log(err))
+    })
 
     /* Load stored todos to setTodos in the application */
     useEffect(() => {
@@ -53,13 +73,13 @@ function App() {
 
     /* Return application */
     return (
-      <>
+      <div className='App'>
           <TodoList todos = { todos } toggleTodo={toggleTodo}/>
           <input ref={ todoInputRef } type="text" />
           <button onClick={handleOnTodo}>Add To-Do</button>
           <button onClick={handleOnClearComplete}>Clear completed</button><br/>
           <span>{todos.filter(todo => !todo.complete).length} left to-do</span>
-      </>
+      </div>
     );
 }
 
